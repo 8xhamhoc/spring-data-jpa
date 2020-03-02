@@ -29,20 +29,26 @@ public class SpringDataJpaApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-	    log.info("============Start============");
+//        try {
+//            bookRepository.deleteAll();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-	    bookRepository.save(new Book("Deep work"));
-	    bookRepository.save(new Book("Harvard at 4 a.m"));
-	    bookRepository.save(new Book("Amazon empire"));
-
-	    log.info("============Find all=========");
-
-	    bookRepository.findAll().forEach(x -> log.info("Book name: " + x.getName()));
-
-        log.info("==========Find by name========");
-
-        bookRepository.findByName("Deep work").forEach(x -> log.info("Found: " + x.getName()));
-
-        log.info("=============End=============");
+//	    log.info("============Start============");
+//
+//	    bookRepository.save(new Book("Deep work"));
+//	    bookRepository.save(new Book("Harvard at 4 a.m"));
+//	    bookRepository.save(new Book("Amazon empire"));
+//
+//	    log.info("============Find all=========");
+//
+//	    bookRepository.findAll().forEach(x -> log.info("Book name: " + x.getName()));
+//
+//        log.info("==========Find by name========");
+//
+//        bookRepository.findByName("Deep work").forEach(x -> log.info("Found: " + x.getName()));
+//
+//        log.info("=============End=============");
     }
 }

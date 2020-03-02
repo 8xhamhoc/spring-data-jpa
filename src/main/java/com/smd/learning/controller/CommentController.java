@@ -23,7 +23,13 @@ public class CommentController {
 
     @GetMapping("/posts/{postId}/comments")
     public Page<Comment> getCommentsByPostId(@PathVariable("postId") Long postId, Pageable pageable) {
-        return commentRepository.findByPostId(postId, pageable);
+        Page<Comment> comments = commentRepository.findByPostId(postId, pageable);
+
+        comments.getContent().forEach(comment -> {
+            System.out.println("Post: " + comment.getPost().getContent());
+        });
+
+        return comments;
     }
 
     @PostMapping("/posts/{postId}/comments")
@@ -43,7 +49,7 @@ public class CommentController {
             throw new ResourceNotFoundException("PostId " + postId + " not found");
         }
 
-        return commentRepository.findById(postId).map(comment -> {
+        return commentRepository.findById(commentId).map(comment -> {
             comment.setText(commentRequest.getText());
             return commentRepository.save(comment);
         }).orElseThrow(() -> new ResourceNotFoundException("Comment Id " + commentId + " not found"));
