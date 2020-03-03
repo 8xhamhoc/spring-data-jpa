@@ -1,5 +1,9 @@
 package com.smd.learning.entity;
 
+import com.fasterxml.jackson.annotation.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,10 +18,13 @@ public class Page {
     private String content;
     private String chapter;
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "book_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "book_id", nullable = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonProperty("book_id")
     private Book book;
 
     public Page() {

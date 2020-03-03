@@ -4,9 +4,12 @@ import com.smd.learning.entity.Book;
 import com.smd.learning.entity.Page;
 import com.smd.learning.repository.BookRepository;
 import com.smd.learning.repository.PageRepository;
+import com.smd.learning.response.PagesResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,9 +38,14 @@ public class PageController {
 //    }
 
     @GetMapping("/books/{bookId}/pages")
-    public List<Page> getAllByBookId(@PathVariable("bookId") Long bookId) {
+    public ResponseEntity<PagesResp> getAllByBookId(@PathVariable("bookId") Long bookId) {
         List<Page> pages = pageRepository.findByBookId(bookId);
-        return pages;
+
+        pages.forEach(page -> {
+            System.out.println("Book name: " + page.getBook().getName());
+        });
+
+        return new ResponseEntity(new PagesResp(pages), HttpStatus.OK);
     }
 
 

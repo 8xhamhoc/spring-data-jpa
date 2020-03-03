@@ -2,12 +2,14 @@ package com.smd.learning.controller;
 
 import com.smd.learning.entity.Book;
 import com.smd.learning.repository.BookRepository;
+import com.smd.learning.response.BooksResp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -21,8 +23,18 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public Page<Book> getBooks(Pageable pageable) {
-        return bookRepository.findAll(pageable);
+    public ResponseEntity<List<Book>> getBooks() {
+        List<Book> books = bookRepository.findAll();
+        System.out.println("Book size: " + books.size());
+
+        books.forEach(book -> {
+            System.out.println("Page size: " + book.getPages().size());
+            book.getPages().forEach(page -> {
+                System.out.println("Page content: " + page.getContent());
+            });
+        });
+
+        return new ResponseEntity(new BooksResp(books), HttpStatus.OK);
     }
 
     @PostMapping("/books")
