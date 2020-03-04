@@ -4,7 +4,10 @@ import com.smd.learning.entity.Course;
 import com.smd.learning.exception.ResourceNotFoundException;
 import com.smd.learning.repository.CourseRepository;
 import com.smd.learning.repository.InstructorRepository;
+import com.smd.learning.response.CourseResp;
+import com.smd.learning.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +22,9 @@ public class CourseController {
 
     @Autowired
     private InstructorRepository instructorRepository;
+
+    @Autowired
+    private CourseService courseService;
 
     @GetMapping("/instructors/{instructorId}/courses")
     public List<Course> getCoursesByInstructor(@PathVariable(value = "instructorId") Integer instructorId) {
@@ -50,12 +56,22 @@ public class CourseController {
     }
 
     @DeleteMapping("/instructors/{instructorId}/courses/{courseId}")
-    public ResponseEntity<?> deleteCourse(@PathVariable(value = "instructorId") Long instructorId,
-                                          @PathVariable(value = "courseId") Long courseId) throws ResourceNotFoundException {
+    public ResponseEntity<?> deleteCourse(@PathVariable(value = "instructorId") Integer instructorId,
+                                          @PathVariable(value = "courseId") Integer courseId) throws ResourceNotFoundException {
         return courseRepository.findByIdAndInstructorId(courseId, instructorId).map(course -> {
             courseRepository.delete(course);
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new ResourceNotFoundException("Course not found with id " + courseId + " and instructorId " + instructorId));
+    }
+
+    @GetMapping("/instructors/{instructorId}/courses/{courseId}")
+    public ResponseEntity<?> getCourse(@PathVariable(value = "instructorId") Integer instructorId,
+                                       @PathVariable(value = "courseId") Integer courseId) throws ResourceNotFoundException {
+        Course course = courseService.findByIdAndInstructorId(courseId, instructorId);
+        if (course == null) {
+            new ResourceNotFoundException("Course not found with id " + courseId + " and instructorId " + instructorId);
+        }
+        return new ResponseEntity(new CourseResp(course), HttpStatus.OK);
     }
 
 }

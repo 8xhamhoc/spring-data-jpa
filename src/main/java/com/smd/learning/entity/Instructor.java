@@ -25,7 +25,7 @@ public class Instructor extends AuditModel {
     private String email;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "instructor", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "instructor", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<Course> courses = new ArrayList<>();
 
     public Instructor() {

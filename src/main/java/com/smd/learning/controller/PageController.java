@@ -6,7 +6,6 @@ import com.smd.learning.repository.BookRepository;
 import com.smd.learning.repository.PageRepository;
 import com.smd.learning.response.PagesResp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +29,6 @@ public class PageController {
     public void setBookRepository(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
-
-//    @GetMapping("/books/{bookId}/pages")
-//    public org.springframework.data.domain.Page<Page> getAllByBookId(@PathVariable("bookId") Long bookId, Pageable pageable) {
-//        org.springframework.data.domain.Page<Page> pages = pageRepository.findByBookId(bookId, pageable);
-//        return pages;
-//    }
 
     @GetMapping("/books/{bookId}/pages")
     public ResponseEntity<PagesResp> getAllByBookId(@PathVariable("bookId") Long bookId) {
