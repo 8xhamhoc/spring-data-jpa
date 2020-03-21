@@ -3,6 +3,8 @@ package com.smd.learning.controller;
 import com.smd.learning.entity.Instructor;
 import com.smd.learning.exception.ResourceNotFoundException;
 import com.smd.learning.repository.InstructorRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +18,10 @@ import java.util.Map;
 @RequestMapping("/api/v1")
 public class InstructorController {
 
+    private static final Logger log = LoggerFactory.getLogger(InstructorController.class);
+
     @Autowired
     private InstructorRepository instructorRepository;
-
 
     @GetMapping("/instructors")
     public List<Instructor> getInstructors() {
@@ -27,9 +30,13 @@ public class InstructorController {
 
     @GetMapping("/instructors/{id}")
     public ResponseEntity<Instructor> getInstructorById(@PathVariable(value = "id") Integer instructorId) throws ResourceNotFoundException {
-        Instructor user = instructorRepository.findById(instructorId)
+        Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Instructor not found :: " + instructorId));
-        return ResponseEntity.ok().body(user);
+
+        instructor.getCourses().forEach(course -> {
+            log.info("=== Course title: " + course.getTitle());
+        });
+        return ResponseEntity.ok().body(instructor);
     }
 
     @PostMapping("/instructors")
